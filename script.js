@@ -2,11 +2,16 @@
 
 //implementar contador
 let diceRandom = 0;
+let score = 0;
+let currentScore = 0;
+
 const diceImg = document.querySelector('.dice');
-const currentScore = document.querySelector('.current-score');
-let current = 0;
 const btnRoll = document.querySelector('.btn--roll');
+
 const players = document.querySelectorAll('.player');
+const scoreElement = document.querySelectorAll('.score');
+const currentScoreElement = document.querySelectorAll('.current-score');
+const btnHold = document.querySelector('.btn--hold');
 
 const sumCurrentScore = function () {
   current = current + diceRandom;
@@ -14,7 +19,21 @@ const sumCurrentScore = function () {
   console.log(diceRandom, current);
 };
 
-const holdPlayer = function () {};
+const holdPlayer = function () {
+  const currentPlayer = [...players].findIndex(player =>
+    player.classList.contains('player--active'),
+  );
+
+  console.log(currentPlayer);
+
+  players[currentPlayer].classList.remove('player--active');
+  scoreElement[currentPlayer].classList.remove('score--active');
+  currentScoreElement[currentPlayer].classList.remove('current--score--active');
+  const nextPlayer = (currentPlayer + 1) % players.length;
+  players[nextPlayer].classList.add('player--active');
+  scoreElement[nextPlayer].classList.add('score--active');
+  currentScoreElement[nextPlayer].classList.add('current--score--active');
+};
 
 btnRoll.addEventListener('click', function () {
   diceRandom = Math.trunc(Math.random() * 6) + 1;
@@ -39,4 +58,8 @@ btnRoll.addEventListener('click', function () {
       break;
   }
   sumCurrentScore();
+});
+
+btnHold.addEventListener('click', function () {
+  holdPlayer();
 });
