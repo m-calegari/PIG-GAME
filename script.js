@@ -2,57 +2,59 @@
 
 //implementar timer
 let diceRandom = 0;
-let score = 0;
 let currentScore = 0;
+
+const btnNew = document.querySelector('.btn--new');
 
 const diceImg = document.querySelector('.dice');
 const btnRoll = document.querySelector('.btn--roll');
 
 const players = document.querySelectorAll('.player');
-let currentPlayer;
+let currentPlayer = 0;
 const scoreElement = document.querySelectorAll('.score');
-let activeScore;
 const currentScoreElement = document.querySelectorAll('.current-score');
-let activeCurrentScore;
 const btnHold = document.querySelector('.btn--hold');
-
-const sumCurrentScore = function () {
-  activeCurrentScore = [...currentScoreElement].findIndex(cScore =>
-    cScore.classList.contains('current--score--active'),
-  );
-
-  currentScore = currentScore + diceRandom;
-  currentScoreElement[activeCurrentScore].textContent = currentScore;
-};
 
 const holdPlayer = function () {
   currentPlayer = [...players].findIndex(player =>
     player.classList.contains('player--active'),
   );
 
-  console.log(currentPlayer);
+  if (diceRandom === 1) {
+    currentScoreElement[currentPlayer].textContent = 0;
+  } else {
+    scoreElement[currentPlayer].textContent =
+      Number(scoreElement[currentPlayer].textContent) + currentScore;
+    currentScoreElement[currentPlayer].textContent = 0;
+  }
 
   players[currentPlayer].classList.remove('player--active');
-  scoreElement[currentPlayer].classList.remove('score--active');
-  currentScoreElement[currentPlayer].classList.remove('current--score--active');
-  const nextPlayer = (currentPlayer + 1) % players.length;
-  players[nextPlayer].classList.add('player--active');
-  scoreElement[nextPlayer].classList.add('score--active');
-  currentScoreElement[nextPlayer].classList.add('current--score--active');
+  currentPlayer = (currentPlayer + 1) % players.length;
+  players[currentPlayer].classList.add('player--active');
+  diceRandom = 0;
+  currentScore = 0;
 };
+
+btnNew.addEventListener('click', function () {
+  players[currentPlayer].classList.remove('player--active');
+  players[Math.trunc(Math.random() * 2) + 1].classList.add('player--active');
+  diceRandom = 0;
+  currentScore = 0;
+});
 
 btnRoll.addEventListener('click', function () {
   diceRandom = Math.trunc(Math.random() * 6) + 1;
   switch (diceRandom) {
     case 1:
       diceImg.src = 'assets/dice-1.png';
-      // current = 0;
+      holdPlayer();
       break;
     case 2:
       diceImg.src = 'assets/dice-2.png';
       break;
     case 3:
       diceImg.src = 'assets/dice-3.png';
+      break;
     case 4:
       diceImg.src = 'assets/dice-4.png';
       break;
@@ -63,9 +65,12 @@ btnRoll.addEventListener('click', function () {
       diceImg.src = 'assets/dice-6.png';
       break;
   }
-  sumCurrentScore();
+  currentScore += diceRandom;
+  currentScoreElement[currentPlayer].textContent = currentScore;
+  console.log(currentPlayer);
 });
 
 btnHold.addEventListener('click', function () {
   holdPlayer();
+  console.log(currentPlayer);
 });
