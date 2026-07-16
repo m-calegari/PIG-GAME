@@ -1,33 +1,32 @@
 'use strict';
 
 //implementar timer
-let diceRandom = 0;
-let currentScore = 0;
 
-const btnNew = document.querySelector('.btn--new');
-
+// Select element
 const diceImg = document.querySelector('.dice');
-const btnRoll = document.querySelector('.btn--roll');
 
+// Select all the elements with the same class
 const players = document.querySelectorAll('.player');
-let currentPlayer = 0;
-const findCurrentPlayer = () =>
-  [...players].findIndex(player => player.classList.contains('player--active'));
 const scoreElement = document.querySelectorAll('.score');
 const currentScoreElement = document.querySelectorAll('.current-score');
+
+// Select buttons
+const btnNew = document.querySelector('.btn--new');
+const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
 
-const holdPlayer = function () {
+let diceRandom;
+let currentScore = 0;
+let currentPlayer = 0;
+
+diceImg.style.display = 'none';
+
+const findCurrentPlayer = () =>
+  [...players].findIndex(player => player.classList.contains('player--active'));
+
+const switchPlayer = function () {
+  currentScoreElement[currentPlayer].textContent = 0;
   currentPlayer = findCurrentPlayer();
-
-  if (diceRandom === 1) {
-    currentScoreElement[currentPlayer].textContent = 0;
-  } else {
-    scoreElement[currentPlayer].textContent =
-      Number(scoreElement[currentPlayer].textContent) + currentScore;
-    currentScoreElement[currentPlayer].textContent = 0;
-  }
-
   players[currentPlayer].classList.remove('player--active');
   currentPlayer = (currentPlayer + 1) % players.length;
   players[currentPlayer].classList.add('player--active');
@@ -36,6 +35,7 @@ const holdPlayer = function () {
 };
 
 btnNew.addEventListener('click', function () {
+  diceImg.style.display = 'none';
   players[findCurrentPlayer()].classList.remove('player--active');
   players[Math.trunc(Math.random() * players.length)].classList.add(
     'player--active',
@@ -50,35 +50,28 @@ btnNew.addEventListener('click', function () {
   currentScore = 0;
 });
 
+//Rolling dice
 btnRoll.addEventListener('click', function () {
+  // Generates a number from 1 to 6
   diceRandom = Math.trunc(Math.random() * 6) + 1;
-  switch (diceRandom) {
-    case 1:
-      diceImg.src = 'assets/dice-1.png';
-      holdPlayer();
-      break;
-    case 2:
-      diceImg.src = 'assets/dice-2.png';
-      break;
-    case 3:
-      diceImg.src = 'assets/dice-3.png';
-      break;
-    case 4:
-      diceImg.src = 'assets/dice-4.png';
-      break;
-    case 5:
-      diceImg.src = 'assets/dice-5.png';
-      break;
-    case 6:
-      diceImg.src = 'assets/dice-6.png';
-      break;
+  // Display dice
+  diceImg.style.display = '';
+  diceImg.src = `assets/dice-${diceRandom}.png`;
+  // Check for number 1
+  if (diceRandom !== 1) {
+    // Increase the current score
+    currentScore += diceRandom;
+    // Passes the value from the variable to the element
+    currentScoreElement[currentPlayer].textContent = currentScore;
+  } else {
+    switchPlayer();
   }
-  currentScore += diceRandom;
-  currentScoreElement[currentPlayer].textContent = currentScore;
-  console.log(currentPlayer);
 });
 
 btnHold.addEventListener('click', function () {
-  holdPlayer();
-  console.log(currentPlayer);
+  scoreElement[currentPlayer].textContent =
+    Number(scoreElement[currentPlayer].textContent) + currentScore;
+  currentScoreElement[currentPlayer].textContent = 0;
+
+  switchPlayer();
 });
