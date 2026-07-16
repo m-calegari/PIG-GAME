@@ -1,6 +1,6 @@
 'use strict';
 
-//implementar contador
+//implementar timer
 let diceRandom = 0;
 let score = 0;
 let currentScore = 0;
@@ -9,18 +9,24 @@ const diceImg = document.querySelector('.dice');
 const btnRoll = document.querySelector('.btn--roll');
 
 const players = document.querySelectorAll('.player');
+let currentPlayer;
 const scoreElement = document.querySelectorAll('.score');
+let activeScore;
 const currentScoreElement = document.querySelectorAll('.current-score');
+let activeCurrentScore;
 const btnHold = document.querySelector('.btn--hold');
 
 const sumCurrentScore = function () {
-  current = current + diceRandom;
-  currentScore.textContent = current;
-  console.log(diceRandom, current);
+  activeCurrentScore = [...currentScoreElement].findIndex(cScore =>
+    cScore.classList.contains('current--score--active'),
+  );
+
+  currentScore = currentScore + diceRandom;
+  currentScoreElement[activeCurrentScore].textContent = currentScore;
 };
 
 const holdPlayer = function () {
-  const currentPlayer = [...players].findIndex(player =>
+  currentPlayer = [...players].findIndex(player =>
     player.classList.contains('player--active'),
   );
 
@@ -40,7 +46,7 @@ btnRoll.addEventListener('click', function () {
   switch (diceRandom) {
     case 1:
       diceImg.src = 'assets/dice-1.png';
-      current = 0;
+      // current = 0;
       break;
     case 2:
       diceImg.src = 'assets/dice-2.png';
