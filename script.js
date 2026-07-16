@@ -11,14 +11,14 @@ const btnRoll = document.querySelector('.btn--roll');
 
 const players = document.querySelectorAll('.player');
 let currentPlayer = 0;
+const findCurrentPlayer = () =>
+  [...players].findIndex(player => player.classList.contains('player--active'));
 const scoreElement = document.querySelectorAll('.score');
 const currentScoreElement = document.querySelectorAll('.current-score');
 const btnHold = document.querySelector('.btn--hold');
 
 const holdPlayer = function () {
-  currentPlayer = [...players].findIndex(player =>
-    player.classList.contains('player--active'),
-  );
+  currentPlayer = findCurrentPlayer();
 
   if (diceRandom === 1) {
     currentScoreElement[currentPlayer].textContent = 0;
@@ -36,8 +36,16 @@ const holdPlayer = function () {
 };
 
 btnNew.addEventListener('click', function () {
-  players[currentPlayer].classList.remove('player--active');
-  players[Math.trunc(Math.random() * 2) + 1].classList.add('player--active');
+  players[findCurrentPlayer()].classList.remove('player--active');
+  players[Math.trunc(Math.random() * players.length)].classList.add(
+    'player--active',
+  );
+  scoreElement.forEach(sc => {
+    sc.textContent = 0;
+  });
+  currentScoreElement.forEach(csc => {
+    csc.textContent = 0;
+  });
   diceRandom = 0;
   currentScore = 0;
 });
