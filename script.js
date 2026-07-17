@@ -1,6 +1,6 @@
 'use strict';
 
-//implementar timer
+//implementar add more players
 
 // Select element
 const diceImg = document.querySelector('.dice');
@@ -51,6 +51,8 @@ btnNew.addEventListener('click', function () {
   players[Math.trunc(Math.random() * players.length)].classList.add(
     'player--active',
   );
+  // Remove class 'player--winner'
+  players[currentPlayer].classList.remove('player--winner');
   // Set 0 at all score elements
   scoreElement.forEach(sc => {
     sc.textContent = 0;
@@ -88,6 +90,13 @@ btnHold.addEventListener('click', function () {
     Number(scoreElement[currentPlayer].textContent) + currentScore;
   // Set the current score of the current player to 0
   currentScoreElement[currentPlayer].textContent = 0;
-  // Call function
-  switchPlayer();
+  // Player win if its score is 100 or more
+  if (Number(scoreElement[currentPlayer].textContent) >= 100) {
+    players[currentPlayer].classList.add('player--winner');
+    btnRoll.disabled = true;
+    btnHold.disabled = true;
+  } else {
+    // Call function
+    switchPlayer();
+  }
 });
