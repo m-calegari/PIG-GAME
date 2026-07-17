@@ -62,6 +62,8 @@ btnNew.addEventListener('click', function () {
     csc.textContent = 0;
   });
   currentScore = 0;
+  btnRoll.disabled = false;
+  btnHold.disabled = false;
 });
 
 //Rolling dice
@@ -91,7 +93,7 @@ btnHold.addEventListener('click', function () {
   // Set the current score of the current player to 0
   currentScoreElement[currentPlayer].textContent = 0;
   // Player win if its score is 100 or more
-  if (Number(scoreElement[currentPlayer].textContent) >= 100) {
+  if (Number(scoreElement[currentPlayer].textContent) >= 20) {
     players[currentPlayer].classList.add('player--winner');
     btnRoll.disabled = true;
     btnHold.disabled = true;
